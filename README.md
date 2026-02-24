@@ -98,3 +98,95 @@ fun returnFunction() {
 var fn = returnFunction();
 fn();
 ```
+
+Here inner accesses a local variable declared outside of it's body, for which to work, inner has to hold on to references of the outside variable. This can do it, and it's called closures, implementing these adds a decent amount of complexity because we can no longer assume variable scope works strictly like a stack where local variables evaporate the moment the fucntion returns. Kind of does add to the challenge.
+
+# Classes
+
+Since Lox has dynamic typing, scope, and closures it's almost a functional language, but also halfway to an object-oriented language. Lox is object oriented because most people that implements languages, leaves objects out, and since it's a wild thing the original author decided to do it. Lowkey sounds interesting ;).
+
+## Classes or prototypes
+
+In Class-based languages, there's instances and classes, instances storing state, and classes containing methods and inheritance. Prototype-based languages merge these two concepts, there are only objects, no classes, and each individual object may contain state and methods. Prototypes are easier to implement, but they do so by pushing the compleity onto the user. So for Lox, we'll be going with a class-based language.
+
+## Classes in Lox
+
+```c
+class Breakfast {
+  cook() {
+    print "Eggs a-fryin'!";
+  }
+
+  serve(who) {
+    print "Enjoy your breakfast, " + who + ".";
+  }
+}
+```
+
+The body of the class contains it's methods, they look like function declarations but without the `fun` keyword. When a class is declared, it creates an object and stores it in the variable. Classes are also first class in Lox.
+
+To create instances, call it like a function.
+
+```
+var breakfast = Breakfast();
+print breakfast;
+
+```
+
+### Instantiation and initialization
+
+We also need state for classes, and we can add properties onto objects, if it didn't exist, it would be created. To access a field or method on the current object from within a method, we use `this`.
+
+```
+breakfast.meat = "sausage";
+breakfast.bread = "sourdough";
+class Breakfast {
+  serve(who) {
+    print "Enjoy your " + this.meat + " and " +
+        this.bread + ", " + who + ".";
+  }
+
+  // ...
+}
+```
+
+If your class has a method name init() it is called automatically when the object is constructed. Any parameters passed to the class are forwarded to it as well.
+
+```c
+class Breakfast {
+  init(meat, bread) {
+    this.meat = meat;
+    this.bread = bread;
+  }
+
+  // ...
+}
+
+var baconAndToast = Breakfast("bacon", "toast");
+baconAndToast.serve("Dear Reader");
+// "Enjoy your bacon and toast, Dear Reader."
+```
+
+# Inheritance
+
+```c
+class Brunch < Breakfast {
+  drink() {
+    print "How about a Bloody Mary?";
+  }
+}
+```
+
+Here we use the `<` keyword for inheritance. Every method defined in the super/parent class is also available to its subclasses. Even `init()` gets inherited, but we want our own, while also calling the initial one.
+To access the superclasses's methods, we can use the `super` keyword.
+
+```c
+class Brunch < Breakfast {
+  init(meat, bread, drink) {
+    super.init(meat, bread);
+    this.drink = drink;
+  }
+}
+```
+
+That's basically it for the `core` language, now we work on the standard library, the set of functionality implemented directly in the interpreter. But, the author says we'll not be doing that.
