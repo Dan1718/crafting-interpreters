@@ -189,4 +189,4 @@ class Brunch < Breakfast {
 }
 ```
 
-That's basically it for the `core` language, now we work on the standard library, the set of functionality implemented directly in the interpreter. But, the author says we'll not be doing that.
+That's basically it for the `core` language, now we work on the standard library, the set of functionality implemented directly in the interpreter. But, the author says we'll not be doing that. (I might do it because why not). The stuff includes - String manipulation, trigonometric functions, file I/O, networking, stdio.
