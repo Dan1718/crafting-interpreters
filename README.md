@@ -69,4 +69,32 @@ Function call expression is basically the same as it does in C.
 
 `funcName(arg1,arg2);` or `funcName();`
 
-The parantheses are mandatory.
+The parantheses are mandatory unlike Ruby.
+
+- an argument is an actual value you pass to a function when you call it.
+- a parameter is a variable that holds the value of the arguement inside the body of the function, thus a function declaration has a parameter list.
+
+- The body of a function is always a block, inside it you can return a value using the `return` statement. If execution reaches the end of the block without hitting a `return` it implicitly returns `nil`
+
+You define a function using the `fun` statement.
+
+# Closures
+
+Functions are first class in Lox, which just means they are real values that you can get a reference to, store in variables, pass around etc.
+
+Since function declarations are statements, you can declare local functions inside another function. If you combine local functions, first class functions and block scope, you run into situations like this.
+
+```c
+fun returnFunction() {
+  var outside = "outside";
+
+  fun inner() {
+    print outside;
+  }
+
+  return inner;
+}
+
+var fn = returnFunction();
+fn();
+```
