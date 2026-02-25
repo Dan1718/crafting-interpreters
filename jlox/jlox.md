@@ -33,3 +33,59 @@ Now we know what we're trying to do, some basic structure for it, now we just ne
 ## Scanner
 
 - Make a new method for scanner, and a function scantokens(), which loops through again and again, calls another method scanToken();, and at the end, adds an EOF token.
+
+## Parser
+
+### Theory/how it should work
+
+- For arithmetic functions, we can do it using a post order traversal of a tree.
+
+#### Context free Grammar?
+
+A formal grammar's job is to specify what strings are valid, and what aren't, without further context
+A terminal is a letter from the grammar's alphabet, (like a literal), in this case tokens coming from the scanner like `if` or `1234`.
+A non terminal is a named reference to another rule in the grammar. You may have multiple rules with the same name, and when you reach a nonterminal with that name, you may choose any of the rules.
+
+So basically this is equivalent to codifying grammar, which was first done a few thousand years ago for Sanskrit, after which John Backus needed a notation and came up with BNF, and everything after uses some flavour of it. A basic example given in the book is as follows :
+
+```
+breakfast  → protein "with" breakfast "on the side" ;
+breakfast  → protein ;
+breakfast  → bread ;
+
+protein    → crispiness "crispy" "bacon" ;
+protein    → "sausage" ;
+protein    → cooked "eggs" ;
+
+crispiness → "really" ;
+crispiness → "really" crispiness ;
+
+cooked     → "scrambled" ;
+cooked     → "poached" ;
+cooked     → "fried" ;
+
+bread      → "toast" ;
+bread      → "biscuits" ;
+bread      → "English muffin" ;
+```
+
+Instead of repeating the rule name each time we want to add another production to it, we can also use `|` for eg - `bread → "toast" | "biscuits" | "English muffin" ;`.
+
+- Further we'll allow parantheses for grouping, then allow `|` within that as well. For eg - `protein → ( "scrambled" | "poached" | "fried" ) "eggs" ;`
+- We can also show recursion like `crispiness → "really" "really"* ;`
+
+- A postfix `+` is similiar, but requires the preceding production to appear at least once, while the postfix `?` is for an optional production. It can happen zero or one time, but not more.
+
+With all these rules we can condense it down to
+
+```
+breakfast → protein ( "with" breakfast "on the side" )?
+          | bread ;
+
+protein   → "really"+ "crispy" "bacon"
+          | "sausage"
+          | ( "scrambled" | "poached" | "fried" ) "eggs" ;
+
+bread     → "toast" | "biscuits" | "English muffin" ;
+
+```
